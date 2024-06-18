@@ -1,5 +1,5 @@
 [package]
-name = "battleship"
+name = "battleship-client"
 version = "0.1.0"
 edition = "2021"
 
