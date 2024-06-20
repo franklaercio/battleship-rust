@@ -25,7 +25,7 @@ impl<R: BufRead, W: Write> Player<R, W> {
     pub fn place_ships(&mut self) -> Result<()> {
         write!(self.writer, "Place your ships.\r\n")?;
         self.writer.flush()?;
-        place_ships(&mut self.reader, &mut self.writer, &mut self.board)
+        place_ships(&mut self.reader, &mut self.writer, &mut self.board, &self.hits)
     }
 
     pub fn take_turn(&mut self, opponent_board: &[[bool; BOARD_SIZE]]) -> Result<()> {

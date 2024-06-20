@@ -3,12 +3,15 @@ use std::io::{BufRead, Result, Write};
 use crate::player::Player;
 use crate::utils::read_position;
 
+use crate::ui::display_placed_ships_board;
+
 pub const BOARD_SIZE: usize = 5;
 pub const TOTAL_ROUNDS: usize = 5;
 
-pub fn place_ships(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool; 5]]) -> Result<()> {
+pub fn place_ships(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool; 5]], hits: &[(usize, usize)]) -> Result<()> {
     write!(w, "\nIt's your time to place 3 ships.\r\n\n")?;
     w.flush()?;
+    display_placed_ships_board(w, board, hits)?;
     for _ in 0..3 {
         write!(w, "Ship at (format: x,y): ")?;
         w.flush()?;
@@ -16,6 +19,7 @@ pub fn place_ships(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool;
         board[x][y] = true;
         write!(w, "Ship placed at ({}, {})\r\n\n", x, y)?;
         w.flush()?;
+        display_placed_ships_board(w, board, hits)?;
     }
 
     write!(w, "All ships placed, await your opponent play!")?;
