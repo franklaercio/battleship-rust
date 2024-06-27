@@ -84,13 +84,13 @@ cd battleship-rust
 3. Build the project:
 
 ```sh
-cargo build server && cargo build client
+cargo build
 ```
 
 4. Run the project:
 
 ```sh
-cargo run server && cargo run client
+cargo run
 ```
 
 ## Usage
