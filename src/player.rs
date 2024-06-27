@@ -1,6 +1,6 @@
 use std::io::{BufRead, Result, Write};
 
-use crate::game::{BOARD_SIZE, place_ships, player_turn};
+use crate::game::{BOARD_SIZE, TOTAL_SHIPS, place_ships, player_turn};
 use crate::ui::display_board;
 
 pub struct Player<R: BufRead, W: Write> {
@@ -9,6 +9,7 @@ pub struct Player<R: BufRead, W: Write> {
     pub board: [[bool; BOARD_SIZE]; BOARD_SIZE],
     pub hits: Vec<(usize, usize)>,
     pub ip: String,
+    pub ships_total: usize,
 }
 
 impl<R: BufRead, W: Write> Player<R, W> {
@@ -19,6 +20,7 @@ impl<R: BufRead, W: Write> Player<R, W> {
             board: [[false; BOARD_SIZE]; BOARD_SIZE],
             hits: Vec::new(),
             ip,
+            ships_total: TOTAL_SHIPS,
         }
     }
 
