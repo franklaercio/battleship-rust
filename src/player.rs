@@ -30,7 +30,7 @@ impl<R: BufRead, W: Write> Player<R, W> {
         place_ships(&mut self.reader, &mut self.writer, &mut self.board, &self.hits)
     }
 
-    pub fn take_turn(&mut self, opponent_board: &[[bool; BOARD_SIZE]]) -> Result<()> {
+    pub fn take_turn(&mut self, opponent_board: &mut [[bool; BOARD_SIZE]]) -> Result<()> {
         display_board(&mut self.writer, opponent_board, &self.hits)?;
         player_turn(&mut self.reader, &mut self.writer, opponent_board, &mut self.hits)
     }

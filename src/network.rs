@@ -40,17 +40,17 @@ pub fn handle_client(mut stream: TcpStream) -> Result<()> {
     player2.place_ships()?;
 
     for i in 0..TOTAL_ROUNDS {
-        if(player1.ships_total == 0 || player2.ships_total == 0) {
+        if player1.ships_total == 0 || player2.ships_total == 0 {
             break;
         }
 
         info!("Playing round {}", i + 1);
         if i % 2 == 0 {
             info!("Player 1 ({}) turn", player1.ip);
-            player1.take_turn(&player2.board)?;
+            player1.take_turn(&mut player2.board)?;
         } else {
             info!("Player 2 ({}) turn", player2.ip);
-            player2.take_turn(&player1.board)?;
+            player2.take_turn(&mut player1.board)?;
         }
     }
 

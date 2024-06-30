@@ -4,7 +4,7 @@ use log::info;
 use crate::player::Player;
 use crate::utils::read_position;
 
-use crate::ui::display_placed_ships_board;
+use crate::ui::{display_attacked_ships_board, display_board, display_placed_ships_board};
 
 pub const BOARD_SIZE: usize = 5;
 pub const TOTAL_ROUNDS: usize = 5;
@@ -29,8 +29,15 @@ pub fn place_ships(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool;
     Ok(())
 }
 
-pub fn player_turn(r: &mut impl BufRead, w: &mut impl Write, board: &[[bool; 5]], hits: &mut Vec<(usize, usize)>) -> Result<()> {
-    todo!("Player must be selected a position to attack the opponent board");
+pub fn player_turn(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool; 5]], hits: &mut Vec<(usize, usize)>) -> Result<()> {
+    write!(w, "Attack ship at (format: x,y): ")?;
+    w.flush()?;
+    let (x, y) = read_position(r, w)?;
+    hits.push((x,y));
+    write!(w, "\nYou attacked at ({}, {})\r\n\n", x, y)?;
+    w.flush()?;
+    display_attacked_ships_board(w, board, hits)?;
+    Ok(())
 }
 
 pub fn determine_winner<R1: BufRead, W1: Write, R2: BufRead, W2: Write>(

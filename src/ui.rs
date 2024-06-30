@@ -53,3 +53,19 @@ pub fn display_placed_ships_board(out: &mut impl Write, board: &[[bool; 5]], hit
     }
     out.flush()
 }
+
+pub fn display_attacked_ships_board(out: &mut impl Write, board: &[[bool; 5]], hits: &[(usize, usize)]) -> Result<()> {
+    for i in 0..BOARD_SIZE {
+        for j in 0..BOARD_SIZE {
+            if hits.contains(&(i, j)) && board[i][j] {
+                write!(out, " X ")?;
+            } else if hits.contains(&(i, j)) {
+                write!(out, " O ")?;
+            } else {
+                write!(out, " ~ ")?;
+            }
+        }
+        writeln!(out, "\r\n")?;
+    }
+    out.flush()
+}
