@@ -60,7 +60,7 @@ pub fn player_turn(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool;
     }
     
     display_attacked_ships_board(w, board, hits)?;
-    write!(w, "\nWating the other play attack...\r\n\n")?;
+    write!(w, "\nWating the other opponent's attack...\r\n\n")?;
     w.flush()?;
     
     Ok(())
@@ -74,7 +74,7 @@ pub fn determine_winner<R1: BufRead, W1: Write, R2: BufRead, W2: Write>(
     let score2 = player2.calculate_score(&player1.board);
   
     let mut message1 = format!("\nYou won, {} points\n", score1);
-    let mut message2 = format!("\nYou lost, {} points\n", score1);
+    let mut message2 = format!("\nYou lost, {} points\n", score2);
 
     if score2 > score1 {
         message2 = format!("\nYou won, {} points\n", score2);
@@ -86,7 +86,10 @@ pub fn determine_winner<R1: BufRead, W1: Write, R2: BufRead, W2: Write>(
     }
   
     write!(player1.writer, "{}", message1)?;
+    player1.writer.flush()?;
+
     write!(player2.writer, "{}", message2)?;
+    player2.writer.flush()?;
 
     Ok(())
 }
