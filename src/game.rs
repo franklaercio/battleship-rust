@@ -10,17 +10,28 @@ pub const BOARD_SIZE: usize = 5;
 pub const TOTAL_ROUNDS: usize = 49;
 pub const TOTAL_SHIPS: usize = 3;
 
-pub fn place_ships(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool; 5]], hits: &[(usize, usize)]) -> Result<()> {
+pub fn place_ships(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool; BOARD_SIZE]], hits: &[(usize, usize)]) -> Result<()> {
     write!(w, "\nIt's your time to place 3 ships.\r\n\n")?;
     w.flush()?;
     display_placed_ships_board(w, board, hits)?;
+    
     for _ in 0..TOTAL_SHIPS {
-        write!(w, "Ship at (format: x,y): ")?;
-        w.flush()?;
-        let (x, y) = read_position(r, w)?;
-        board[x][y] = true;
-        write!(w, "Ship placed at ({}, {})\r\n\n", x, y)?;
-        w.flush()?;
+        loop {
+            write!(w, "Ship at (format: x,y): ")?;
+            w.flush()?;
+            let (x, y) = read_position(r, w)?;
+            
+            if !board[x][y] {
+                board[x][y] = true;
+                write!(w, "Ship placed at ({}, {})\r\n\n", x, y)?;
+                w.flush()?;
+                break;
+            }
+
+            write!(w, "You alredy placed at ({}, {}), try again!\r\n\n", x, y)?;
+            w.flush()?;
+        }
+
         display_placed_ships_board(w, board, hits)?;
     }
 
@@ -30,13 +41,28 @@ pub fn place_ships(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool;
 }
 
 pub fn player_turn(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool; 5]], hits: &mut Vec<(usize, usize)>) -> Result<()> {
-    write!(w, "Attack ship at (format: x,y): ")?;
-    w.flush()?;
-    let (x, y) = read_position(r, w)?;
-    hits.push((x,y));
-    write!(w, "\nYou attacked at ({}, {})\r\n\n", x, y)?;
-    w.flush()?;
+    loop {
+        write!(w, "Attack ship at (format: x,y): ")?;
+        w.flush()?;
+        let (x, y) = read_position(r, w)?;
+       
+        if !hits.contains(&(x, y)) {
+            hits.push((x,y));
+          
+            write!(w, "\nYou attacked at ({}, {})\r\n\n", x, y)?;
+            w.flush()?;
+            
+            break;
+        } 
+
+        write!(w, "\nYou already attacked at ({}, {}), try again!\r\n\n", x, y)?;
+        w.flush()?;
+    }
+    
     display_attacked_ships_board(w, board, hits)?;
+    write!(w, "\nWating the other play attack...\r\n\n")?;
+    w.flush()?;
+    
     Ok(())
 }
 
