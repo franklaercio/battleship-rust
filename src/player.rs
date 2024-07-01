@@ -32,10 +32,18 @@ impl<R: BufRead, W: Write> Player<R, W> {
 
     pub fn take_turn(&mut self, opponent_board: &mut [[bool; BOARD_SIZE]]) -> Result<()> {
         display_board(&mut self.writer, opponent_board, &self.hits)?;
+        write!(self.writer, "You have {} ships.\r\n", self.ships_total)?;
+        self.writer.flush()?;
         player_turn(&mut self.reader, &mut self.writer, opponent_board, &mut self.hits)
     }
 
     pub fn calculate_score(&self, opponent_board: &[[bool; BOARD_SIZE]]) -> usize {
         self.hits.iter().filter(|&&(x, y)| opponent_board[x][y]).count()
+    }
+    
+    pub fn update_ships(&mut self, wrecked_ships: usize) {
+        if self.ships_total > 1 {
+            self.ships_total = self.ships_total - wrecked_ships;
+        }
     }
 }

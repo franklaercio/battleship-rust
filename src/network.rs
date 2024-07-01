@@ -47,6 +47,9 @@ pub fn handle_client(mut stream: TcpStream) -> Result<()> {
         
         score1 = player1.calculate_score(&player2.board);
         score2 = player2.calculate_score(&player1.board);
+       
+        player1.update_ships(score2);
+        player2.update_ships(score1);
         
         if score1 == TOTAL_SHIPS || score2 == TOTAL_SHIPS {
             break;
