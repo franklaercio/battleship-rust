@@ -7,7 +7,7 @@ use crate::utils::read_position;
 use crate::ui::{display_attacked_ships_board, display_board, display_placed_ships_board};
 
 pub const BOARD_SIZE: usize = 5;
-pub const TOTAL_ROUNDS: usize = 5;
+pub const TOTAL_ROUNDS: usize = 49;
 pub const TOTAL_SHIPS: usize = 3;
 
 pub fn place_ships(r: &mut impl BufRead, w: &mut impl Write, board: &mut [[bool; 5]], hits: &[(usize, usize)]) -> Result<()> {
